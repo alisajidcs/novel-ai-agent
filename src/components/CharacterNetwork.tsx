@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import type { ForceGraphMethods, NodeObject, LinkObject } from 'react-force-graph-2d';
 
 // Dynamically import ForceGraph2D to avoid SSR issues
 const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), {
@@ -13,13 +14,21 @@ interface Character {
   interactions: string[];
 }
 
+type GraphNode = NodeObject & {
+  name: string;
+  val: number;
+  color: string;
+  x: number;
+  y: number;
+};
+
 interface CharacterNetworkProps {
   characters: Character[];
   isLoading: boolean;
 }
 
 export default function CharacterNetwork({ characters, isLoading }: CharacterNetworkProps) {
-  const graphRef = useRef<any>(null);
+  const graphRef = useRef<ForceGraphMethods<NodeObject, LinkObject>>(null);
 
   // removing characters with no interactions
   const filteredCharacters = characters.filter((char) => char.interactions.length > 0);
@@ -67,24 +76,25 @@ export default function CharacterNetwork({ characters, isLoading }: CharacterNet
   return (
     <div className="w-full h-[600px] border rounded-lg overflow-hidden">
       <ForceGraph2D
-        ref={graphRef}
+        ref={graphRef as React.RefObject<ForceGraphMethods<NodeObject, LinkObject>>}
         graphData={graphData}
         nodeLabel="name"
         nodeAutoColorBy="name"
         linkDirectionalParticles={2}
         linkDirectionalParticleSpeed={0.005}
-        nodeCanvasObject={(node: any, ctx, globalScale) => {
-          const label = node.name;
+        nodeCanvasObject={(node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) => {
+          const graphNode = node as GraphNode;
+          const label = graphNode.name;
           const fontSize = 12/globalScale;
           ctx.font = `${fontSize}px Sans-Serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillStyle = node.color;
+          ctx.fillStyle = graphNode.color || 'black';
           ctx.beginPath();
-          ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI);
+          ctx.arc(graphNode.x, graphNode.y, 5, 0, 2 * Math.PI);
           ctx.fill();
           ctx.fillStyle = 'black';
-          ctx.fillText(label, node.x, node.y + 10);
+          ctx.fillText(label, graphNode.x, graphNode.y + 10);
         }}
       />
     </div>

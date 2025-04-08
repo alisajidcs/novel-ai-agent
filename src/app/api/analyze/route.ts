@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
 
-interface Character {
-  name: string;
-  interactions: string[];
-}
-
 export async function POST(request: Request) {
   try {
     const { content } = await request.json();
