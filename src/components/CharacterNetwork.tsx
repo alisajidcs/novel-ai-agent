@@ -50,10 +50,16 @@ export default function CharacterNetwork({ characters, isLoading }: CharacterNet
 
   useEffect(() => {
     if (graphRef.current) {
-      // Center the graph
-      graphRef.current.centerAt(0, 0, 1000);
-      // Zoom to fit
-      graphRef.current.zoomToFit(400);
+      // Reset the graph state
+      graphRef.current.centerAt(0, 0, 0);
+      graphRef.current.zoomToFit(0);
+      // Recenter after a short delay to ensure nodes are positioned
+      setTimeout(() => {
+        if (graphRef.current) {
+          graphRef.current.centerAt(0, 0, 1000);
+          graphRef.current.zoomToFit(100);
+        }
+      }, 100);
     }
   }, [characters]);
 
@@ -76,6 +82,7 @@ export default function CharacterNetwork({ characters, isLoading }: CharacterNet
   return (
     <div className="w-full h-[600px] border rounded-lg overflow-hidden">
       <ForceGraph2D
+        key={characters.length}
         ref={graphRef as React.RefObject<ForceGraphMethods<NodeObject, LinkObject>>}
         graphData={graphData}
         nodeLabel="name"
