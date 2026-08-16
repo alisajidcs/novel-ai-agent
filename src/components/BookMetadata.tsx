@@ -6,17 +6,20 @@ interface BookMetadataProps {
 
 export default function BookMetadata({ metadata }: BookMetadataProps) {
   return (
-    <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">{metadata.title}</h2>
-      <div className="grid grid-cols-2 gap-4 text-gray-600">
+    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h3 className="mb-4 text-2xl font-bold text-gray-900">{metadata.title}</h3>
+      <div className="grid grid-cols-1 gap-4 text-gray-600 sm:grid-cols-3">
         <div>
-          <span className="font-medium">Author:</span> {metadata.author}
+          <span className="block text-xs font-medium uppercase tracking-wide text-gray-400">Author</span>
+          {metadata.author}
         </div>
         <div>
-          <span className="font-medium">Language:</span> {metadata.language}
+          <span className="block text-xs font-medium uppercase tracking-wide text-gray-400">Language</span>
+          {metadata.language}
         </div>
         <div>
-          <span className="font-medium">Downloads:</span> {metadata.downloadCount.toLocaleString()}
+          <span className="block text-xs font-medium uppercase tracking-wide text-gray-400">Downloads</span>
+          {metadata.downloadCount.toLocaleString()}
         </div>
       </div>
     </div>

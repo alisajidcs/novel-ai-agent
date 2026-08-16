@@ -1,28 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
-
-// Helper function to fetch with timeout and retries, since the Gutenberg API is sometimes slow resulting in a timeout error
-async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 3, timeout = 10000): Promise<Response> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-    return response;
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (retries > 0 && (error instanceof Error && error.name === 'AbortError')) {
-      // Wait for 1 second before retrying
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return fetchWithRetry(url, options, retries - 1, timeout);
-    }
-    throw error;
-  }
-}
+import { fetchWithRetry, GUTENBERG_USER_AGENT } from '@/lib/http';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -37,7 +15,7 @@ export async function GET(request: Request) {
     const contentUrl = `https://www.gutenberg.org/cache/epub/${bookId}/pg${bookId}.txt`;
     const contentResponse = await fetchWithRetry(contentUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; NovelAI/1.0; +https://github.com/your-repo)',
+        'User-Agent': GUTENBERG_USER_AGENT,
       },
     });
     
@@ -51,7 +29,7 @@ export async function GET(request: Request) {
     const metadataUrl = `https://www.gutenberg.org/ebooks/${bookId}`;
     const metadataResponse = await fetchWithRetry(metadataUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; NovelAI/1.0; +https://github.com/your-repo)',
+        'User-Agent': GUTENBERG_USER_AGENT,
       },
     });
     
