@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { fetchWithRetry, GUTENBERG_USER_AGENT } from '@/lib/http';
+import { fetchWithRetry, BROWSER_REQUEST_HEADERS } from '@/lib/http';
 
 // Catalog metadata (title, author, cover, subjects, download counts...) comes
 // from Gutendex, a public read-only JSON API mirroring the Project Gutenberg
@@ -40,11 +40,11 @@ async function fetchGutendexPage(params: URLSearchParams, page: number): Promise
   upstream.set('page', String(page));
 
   const response = await fetchWithRetry(`https://gutendex.com/books/?${upstream.toString()}`, {
-    headers: { 'User-Agent': GUTENBERG_USER_AGENT },
+    headers: BROWSER_REQUEST_HEADERS,
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to search the catalog: ${response.statusText}`);
+    throw new Error(`Failed to search the catalog: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
