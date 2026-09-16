@@ -1,16 +1,1 @@
-interface BookContentPreviewProps {
-  content: string;
-}
-
-export default function BookContentPreview({ content }: BookContentPreviewProps) {
-  return (
-    <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold mb-4">Book Content Preview</h3>
-      <div className="prose max-w-none">
-        <pre className="whitespace-pre-wrap font-sans text-gray-700">
-          {content}...
-        </pre>
-      </div>
-    </div>
-  );
-} 
+export default function BookContentPreview({content}:{content:string}) { return <details className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"><summary className="cursor-pointer list-none text-lg font-bold text-slate-900">Preview selected text <span className="ml-2 text-sm font-normal text-slate-400 group-open:hidden">(show)</span></summary><pre className="mt-5 max-h-96 overflow-auto whitespace-pre-wrap font-sans text-sm leading-7 text-slate-600">{content}</pre></details>; }
