@@ -1,24 +1,3 @@
-import type { BookMetadata } from '@/lib/gutenberg';
+import type {BookMetadata} from '@/lib/gutenberg';
 
-interface BookMetadataProps {
-  metadata: BookMetadata;
-}
-
-export default function BookMetadata({ metadata }: BookMetadataProps) {
-  return (
-    <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">{metadata.title}</h2>
-      <div className="grid grid-cols-2 gap-4 text-gray-600">
-        <div>
-          <span className="font-medium">Author:</span> {metadata.author}
-        </div>
-        <div>
-          <span className="font-medium">Language:</span> {metadata.language}
-        </div>
-        <div>
-          <span className="font-medium">Downloads:</span> {metadata.downloadCount.toLocaleString()}
-        </div>
-      </div>
-    </div>
-  );
-} 
+export default function BookMetadata({metadata}:{metadata:BookMetadata}) { return <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600">Loaded novel</p><h2 className="mt-2 text-2xl font-black text-slate-900">{metadata.title}</h2></div><span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Ready to analyze</span></div><div className="mt-6 grid gap-4 text-sm text-slate-600 sm:grid-cols-3"><div><span className="font-semibold text-slate-800">Author:</span> {metadata.author}</div><div><span className="font-semibold text-slate-800">Language:</span> {metadata.language}</div><div><span className="font-semibold text-slate-800">Downloads:</span> {metadata.downloadCount.toLocaleString()}</div></div></div>; }
